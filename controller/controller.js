@@ -61,7 +61,7 @@ function imgSend(req,res) {
         var xmljs = yield xml2json(xml);
         var openid = xmljs.xml.FromUserName;
         var content = xmljs.xml.Content;
-        if(content=='undefind'){
+        if(content == 'undefind'){
             res.send('success');
         }
         console.log(openid);
