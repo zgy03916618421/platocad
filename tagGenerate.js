@@ -4,7 +4,6 @@
 'use strict'
 var Canvas = require('canvas');
 var path = require('path');
-var http = require('http');
 var fs = require('fs');
 var posObj = [
     [
