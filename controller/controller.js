@@ -55,7 +55,7 @@ function imgSend(req,res) {
             token = result.access_token;
             yield redisTemplate.set('access_token_wechat',token);
             yield redisTemplate.expire("access_token_wechat",7200);
-        }no
+        }
         var xml = yield accquireXML(req);
         var xmljs = yield xml2json(xml);
         var openid = xmljs.xml.FromUserName;
@@ -83,7 +83,7 @@ function imgSend(req,res) {
         }
         var strData = yield httpUtils.get(opts);
         var rdata = JSON.parse(strData);
-        var data = rdata.data;;
+        var data = rdata.data;
         console.log(data[2]);
         opts ={
             method : 'GET',
