@@ -8,7 +8,7 @@ var co = require('co');
 var request = require('request');
 var redisTemplate = require('../redisTemplate');
 var httpUtils = require('../HttpUtils');
-//var makeImg = require('../tagGenerate');
+var makeImg = require('../tagGenerate');
 var fs = require('fs');
 //var express=require('express');
 //var app=express();
@@ -55,7 +55,7 @@ function imgSend(req,res) {
             token = result.access_token;
             yield redisTemplate.set('access_token_wechat',token);
             yield redisTemplate.expire("access_token_wechat",7200);
-        }
+        }no
         var xml = yield accquireXML(req);
         var xmljs = yield xml2json(xml);
         var openid = xmljs.xml.FromUserName;
@@ -94,7 +94,7 @@ function imgSend(req,res) {
         var file = yield httpUtils.get(opts);
         fs.writeFileSync('img/'+openid+'temp.png',file,'binary');
         console.log('finish');
-        //makeImg.imgMake(data,username,openid);
+        makeImg.imgMake(data,username,openid);
         opts ={
                 method: 'POST',
                 url: 'https://api.weixin.qq.com/cgi-bin/media/upload',
