@@ -13,4 +13,4 @@ var context = canvas.getContext('2d');
 context.font = '50px PingFangSC-Regular';
 context.fillText('知性', 100, 200);
 var buff = canvas.toBuffer();
-fs.writeFileSync('test.png',buff,{encoding:'utf8'});
+fs.writeFileSync('test1.png',buff);
