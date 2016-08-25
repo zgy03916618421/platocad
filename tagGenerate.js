@@ -4,6 +4,7 @@
 'use strict'
 var Canvas = require('canvas');
 var path = require('path');
+
 var fs = require('fs');
 var posObj = [
     [
@@ -197,18 +198,14 @@ var posObj = [
     ]
 ]
 exports.imgMake = function (data,username,openid) {
-        var Font = Canvas.Font;
         var Image = Canvas.Image;
         var maskImg = new Image();
         var hlTitleImg = new Image();
-        var msyhFont = new Font('msyhFont',fontFile('msyh.ttf'));
-        msyhFont.addFace(fontFile('msyhbd.ttf'),'bold');
         maskImg.src = fs.readFileSync(path.join(__dirname, 'img', 'make_bg.png'));
             var w = 720;
             var h = 840;
             var canvas = new Canvas(w,h);
             var context = canvas.getContext('2d');
-            context.addFont(msyhFont);
             context.drawImage(maskImg,0,0);
             console.log('here1')
             var tag = data[3];
@@ -282,9 +279,9 @@ function setText(context, list){
         arrLen = list[i].length;
         for (k = 0; k < arrLen; k++) {
             if (list[i][k].fontWeight) {
-                context.font = list[i][k].fontWeight + ' ' + (list[i][k].fontSize * 2) + 'px msyhFont';
+                context.font = list[i][k].fontWeight + ' ' + (list[i][k].fontSize * 2) + 'px PingFangSC-Regular';
             } else {
-                context.font = (list[i][k].fontSize * 2) + 'px msyhFont';
+                context.font = (list[i][k].fontSize * 2) + 'px PingFangSC-Regular';
             }
 
             context.fillStyle = list[i][k].color;
@@ -316,9 +313,7 @@ function drawTextErect(context, txtObj){
         context.fillText(txtObj.text[i], x, ((txtObj.y * 2) + (txtObj.fontSize * 2)) + (((2 + txtObj.fontSize) * 2) * i));
     }
 }
-function fontFile(name) {
-    return path.join(_dirname,'/font/',name);
-}
+
 
 
 
