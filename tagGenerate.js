@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/8/22.
  */
+'use strict'
 var Canvas = require('canvas');
 var path = require('path');
 var http = require('http');
