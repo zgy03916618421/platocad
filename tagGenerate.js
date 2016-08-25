@@ -211,12 +211,12 @@ exports.imgMake = function (data,username,openid) {
             var tag = data[3];
             console.log("tag:"+tag);
             var tagErect = data[3][3].pop();
-            for (let i = 0; i < tag.length; i++) {
+           /* for (let i = 0; i < tag.length; i++) {
                 console.log(tag.length);
                 for (let k = 0; k < tag[i].length; k++) {
                     posObj[i][k].text = tag[i][k];
                 }
-            }
+            }*/
             setText(context, posObj);
             setText(context, [
                 [
