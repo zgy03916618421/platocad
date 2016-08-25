@@ -8,7 +8,7 @@ var co = require('co');
 var request = require('request');
 var redisTemplate = require('../redisTemplate');
 var httpUtils = require('../HttpUtils');
-var makeImg = require('../tagGenerate');
+//var makeImg = require('../tagGenerate');
 var fs = require('fs');
 //var express=require('express');
 //var app=express();
@@ -83,21 +83,18 @@ function imgSend(req,res) {
         }
         var strData = yield httpUtils.get(opts);
         var rdata = JSON.parse(strData);
-        var data = rdata.data;
-        //console.log(data);
+        var data = rdata.data;;
         console.log(data[2]);
         opts ={
             method : 'GET',
             url : data[2],
             encoding :'binary'
         }
-      //  var imgStream = yield httpUtils.get(opts);
-       // console.log(imgStream);
+        console.log('here');
         var file = yield httpUtils.get(opts);
         fs.writeFileSync('img/'+openid+'temp.png',file,'binary');
         console.log('finish');
-
-        makeImg.imgMake(data,username,openid);
+        //makeImg.imgMake(data,username,openid);
         opts ={
                 method: 'POST',
                 url: 'https://api.weixin.qq.com/cgi-bin/media/upload',
@@ -113,6 +110,7 @@ function imgSend(req,res) {
                     options : {filename : openid + '.png',contentType : 'image/png'}
                 } }
             }
+        console.log('here 2')
         var upresult = yield httpUtils.post(opts);
         console.log(upresult);
         var upjson = JSON.parse(upresult);
