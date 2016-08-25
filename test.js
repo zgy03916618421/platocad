@@ -8,7 +8,7 @@ var w = 720;
 var h = 840;
 var Font = Canvas.Font;
 function fontFile(name) {
-    return path.join(__dirname,'font',name);
+    return '/font/name';
 }
 var msyhFont = new Font('msyhFont',fontFile('msyh.ttf'));
 msyhFont.addFace(fontFile('msyhbd.tff'),'bold');
