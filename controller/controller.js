@@ -76,7 +76,7 @@ function imgSend(req,res) {
         userinfo=JSON.parse(userinfo);
         var username = userinfo.nickname;
         console.log(username);
-        var url = encodeURI('https://dev-goat.beautifulreading.com/goat/bookdetail/'+content+'/57a7fecce779893b48000002');
+        var url = encodeURI('https://dev-goat.beautifulreading.com/goat/v1/bookdetail/'+content+'/57a7fecce779893b48000002');
         var opts = {
             method : 'GET',
             url : url
