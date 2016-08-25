@@ -41,6 +41,7 @@ function wxcheckSignature(req,res) {
 }
 function imgSend(req,res) {
     co(function *() {
+
         var token = yield redisTemplate.get('access_token_wechat');
         if (token == null){
             var opts = { method: 'GET',
@@ -60,6 +61,9 @@ function imgSend(req,res) {
         var xmljs = yield xml2json(xml);
         var openid = xmljs.xml.FromUserName;
         var content = xmljs.xml.Content;
+        if(content=='undefind'){
+            res.send('success');
+        }
         console.log(openid);
         var url = 'https://api.weixin.qq.com/cgi-bin/user/info';
         var opts = {
