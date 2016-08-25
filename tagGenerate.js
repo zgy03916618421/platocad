@@ -198,6 +198,8 @@ var posObj = [
     ]
 ]
 exports.imgMake = function (data,username,openid) {
+        var buffer = new Buffer(data,'utf8');
+        data = buffer.toString('utf8');
         var Image = Canvas.Image;
         var maskImg = new Image();
         var hlTitleImg = new Image();
