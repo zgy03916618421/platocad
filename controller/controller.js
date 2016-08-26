@@ -41,7 +41,6 @@ function wxcheckSignature(req,res) {
 }
 function imgSend(req,res) {
     co(function *() {
-
         var token = yield redisTemplate.get('access_token_wechat');
         if (token == null){
             var opts = { method: 'GET',
