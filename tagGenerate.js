@@ -279,9 +279,9 @@ function setText(context, list){
         arrLen = list[i].length;
         for (k = 0; k < arrLen; k++) {
             if (list[i][k].fontWeight) {
-                context.font = list[i][k].fontWeight + ' ' + (list[i][k].fontSize * 1.9) + 'px PingFangSC-Regular';
+                context.font = list[i][k].fontWeight + ' ' + (list[i][k].fontSize * 1.9) + 'px simhei';
             } else {
-                context.font = (list[i][k].fontSize * 2) + 'px PingFangSC-Regular';
+                context.font = (list[i][k].fontSize * 2) + 'px simhei';
             }
 
             context.fillStyle = list[i][k].color;
@@ -304,9 +304,9 @@ function drawTextErect(context, txtObj){
     x = txtObj.x * 2;
     for (i; i < len; i++) {
         if (txtObj.fontWeight) {
-            context.font =  txtObj.fontWeight + ' ' + (txtObj.fontSize * 2) + 'px PingFangSC-Regular';
+            context.font =  txtObj.fontWeight + ' ' + (txtObj.fontSize * 2) + 'px simhei';
         } else {
-            context.font = (txtObj.fontSize * 2) + 'px PingFangSC-Regular';
+            context.font = (txtObj.fontSize * 2) + 'px simhei';
         }
 
         context.fillStyle = txtObj.color;
