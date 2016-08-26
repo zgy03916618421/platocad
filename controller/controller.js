@@ -41,102 +41,113 @@ function wxcheckSignature(req,res) {
 }
 function imgSend(req,res) {
     co(function *() {
-        var token = yield redisTemplate.get('access_token_wechat');
-        if (token == null){
-            var opts = { method: 'GET',
-                url: 'https://api.weixin.qq.com/cgi-bin/token',
-                qs:
-                { grant_type: 'client_credential',
-                    appid: 'wx9a66afce31e4ec8b',
-                    secret: 'c2b679dbd1ea6c0ffc99155123a25697' },
-                };
-            var result = yield httpUtils.get(opts);
-            result = JSON.parse(result);
-            token = result.access_token;
-            yield redisTemplate.set('access_token_wechat',token);
-            yield redisTemplate.expire("access_token_wechat",7200);
-        }
         var xml = yield accquireXML(req);
         var xmljs = yield xml2json(xml);
         var openid = xmljs.xml.FromUserName;
         var content = xmljs.xml.Content;
         if(content == 'undefind'){
-            res.send('success');
-        }
-        console.log(openid);
-        var url = 'https://api.weixin.qq.com/cgi-bin/user/info';
-        var opts = {
-            method : 'GET',
-            url : url,
-            qs:
-            {
-                access_token :token,
-                openid : openid
+                res.send('success');
             }
-        };
-        var userinfo = yield httpUtils.get(opts);
-        console.log(userinfo);
-        userinfo=JSON.parse(userinfo);
-        var username = userinfo.nickname;
-        console.log(username);
-        var url = encodeURI('https://dev-goat.beautifulreading.com/goat/v1/bookdetail/'+content+'/57a7fecce779893b48000002');
-        var opts = {
-            method : 'GET',
-            url : url
-        }
-        var strData = yield httpUtils.get(opts);
-        var rdata = JSON.parse(strData);
-        var data = rdata.data;
-        console.log(data[2]);
-        opts ={
-            method : 'GET',
-            url : data[2],
-            encoding :'binary'
-        }
-        console.log('here');
-        var file = yield httpUtils.get(opts);
-        fs.writeFileSync('img/'+openid+'temp.png',file,'binary');
-        console.log('finish');
-        makeImg.imgMake(data,username,openid);
-        opts ={
+        var key = 'user_isnew:' + openid;
+        var user = yield redisTemplate.get(key);
+        if (user == null) {
+            yield redisTemplate.set(key, 'old');
+            var token = yield redisTemplate.get('access_token_wechat');
+            if (token == null) {
+                var opts = {
+                    method: 'GET',
+                    url: 'https://api.weixin.qq.com/cgi-bin/token',
+                    qs: {
+                        grant_type: 'client_credential',
+                        appid: 'wx9a66afce31e4ec8b',
+                        secret: 'c2b679dbd1ea6c0ffc99155123a25697'
+                    },
+                };
+                var result = yield httpUtils.get(opts);
+                result = JSON.parse(result);
+                token = result.access_token;
+                yield redisTemplate.set('access_token_wechat', token);
+                yield redisTemplate.expire("access_token_wechat", 7200);
+            }
+            var url = 'https://api.weixin.qq.com/cgi-bin/user/info';
+            var opts = {
+                method: 'GET',
+                url: url,
+                qs: {
+                    access_token: token,
+                    openid: openid
+                }
+            };
+            var userinfo = yield httpUtils.get(opts);
+            console.log(userinfo);
+            userinfo = JSON.parse(userinfo);
+            var username = userinfo.nickname;
+            console.log(username);
+            var url = encodeURI('https://dev-goat.beautifulreading.com/goat/v1/bookdetail/' + content + '/57a7fecce779893b48000002');
+            var opts = {
+                method: 'GET',
+                url: url
+            }
+            var strData = yield httpUtils.get(opts);
+            var rdata = JSON.parse(strData);
+            var data = rdata.data;
+            console.log(data[2]);
+            opts = {
+                method: 'GET',
+                url: data[2],
+                encoding: 'binary'
+            }
+            console.log('here');
+            var file = yield httpUtils.get(opts);
+            fs.writeFileSync('img/' + openid + 'temp.png', file, 'binary');
+            console.log('finish');
+            makeImg.imgMake(data, username, openid);
+            opts = {
                 method: 'POST',
                 url: 'https://api.weixin.qq.com/cgi-bin/media/upload',
-                qs:
-                { access_token: token,
-                    type: 'image' },
-                headers:
-                {
-                    'content-type': 'multipart/form-data; boundary=---011000010111000001101001' },
-                formData:
-                { media:
-                { value: fs.readFileSync( 'img/'+openid+'.png'),
-                    options : {filename : openid + '.png',contentType : 'image/png'}
-                } }
+                qs: {
+                    access_token: token,
+                    type: 'image'
+                },
+                headers: {
+                    'content-type': 'multipart/form-data; boundary=---011000010111000001101001'
+                },
+                formData: {
+                    media: {
+                        value: fs.readFileSync('img/' + openid + '.png'),
+                        options: {filename: openid + '.png', contentType: 'image/png'}
+                    }
+                }
             }
-        console.log('here 2')
-        var upresult = yield httpUtils.post(opts);
-        console.log(upresult);
-        var upjson = JSON.parse(upresult);
-        var media_id = upjson.media_id;
-        console.log(media_id);
-        opts ={
-            method : 'POST',
-            url: 'https://api.weixin.qq.com/cgi-bin/message/custom/send',
-            qs: { access_token: token },
-            headers:{
-                'content-type': 'application/json'
-            },
-            body:
-            { touser: openid,
-                msgtype: 'image',
-                image: { media_id: media_id } },
-            json: true
+            console.log('here 2')
+            var upresult = yield httpUtils.post(opts);
+            console.log(upresult);
+            var upjson = JSON.parse(upresult);
+            var media_id = upjson.media_id;
+            console.log(media_id);
+            opts = {
+                method: 'POST',
+                url: 'https://api.weixin.qq.com/cgi-bin/message/custom/send',
+                qs: {access_token: token},
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: {
+                    touser: openid,
+                    msgtype: 'image',
+                    image: {media_id: media_id}
+                },
+                json: true
+            }
+            var messageresult = yield httpUtils.post(opts);
+            console.log(messageresult);
+            //yield makeImg.imgMake(data,username,buf);;
+            //console.log(stream);
+            res.end('success');
+        }else
+        {
+            res.send('success');
         }
-        var messageresult = yield httpUtils.post(opts);
-        console.log(messageresult);
-        //yield makeImg.imgMake(data,username,buf);;
-        //console.log(stream);
-        res.end('success');
     }
     )
 }
